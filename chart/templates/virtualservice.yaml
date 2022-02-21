@@ -3,7 +3,7 @@
 apiVersion: networking.istio.io/v1beta1
 kind: VirtualService
 metadata:
-  name: {{ $pkg }}
+  name: {{ template "podinfo.fullname" . }}
   namespace: {{ .Release.Namespace }}
   labels:
     {{- include (printf "%s.labels" $pkg) . | nindent 4 }}
@@ -21,6 +21,6 @@ spec:
   - route:
     - destination:
         port:
-          number: {{ .Values.port | default "8080" }}
-        host: {{ $pkg }}.{{ .Release.Namespace }}.svc.cluster.local
+          number: {{ .Values.service.externalPort | default "8080" }}
+        host: {{ template "podinfo.fullname" . }}.{{ .Release.Namespace }}.svc.cluster.local
 {{- end }}
